@@ -1,0 +1,54 @@
+@font-face {
+    font-family: 'Alegreya Sans', sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    color: #f8d23f;
+}
+
+@font-face {
+    font-family: 'Alegreya Sans', sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    color: #f8d23f;
+}
+
+@font-face {
+    font-family: 'Alegreya Sans', sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    color: #f8d23f;
+}
+
+body{
+    
+	height: 100%;
+	background-image: url("../images/Seinfeld.jpg");
+}
+
+h2, h3, h4, h5, h6{
+	font-family: 'Alegreya Sans', sans-serif;
+	text-align: center;
+    color: #f8d23f;
+}
+
+h1{ 
+    font-family: 'Alegreya Sans', sans-serif;
+    text-align: center;
+    color: #d1232b;
+	font-size: 10vw;
+}
+
+p{
+	font-family: 'Alegreya Sans', sans-serif;
+	font-size: 30px;
+    color: #f8d23f;
+}
+
+div{
+	overflow: auto;
+}
+
+#currentWord{
+    color: #d1232b;
+	letter-spacing: 15px;
+}
