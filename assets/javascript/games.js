@@ -9,10 +9,10 @@ var quotes = ["Yada yada yada","Low Talker","Puffy Shirt","Not that there is any
 var alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", 
 "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
-var repeatLetterMusicTags = ["bubble","cantstandya","contest","dingo","fakes","getdown","getout","giddyup",
+var soundTag = ["bubble","cantstandya","contest","dingo","fakes","getdown","getout","giddyup",
 "icare","idiot","jackass","machine","pirate","pretzels","rediculous"];
 
-var victoryMusicTags = ["reguifter","risk","serenity","society","switzerland","thebro","yada","youstink"];
+var sound2tag = ["reguifter","risk","serenity","society","switzerland","thebro","yada","youstink"];
 var startMusic =["seinfeld"]
 
 var userSelectedWord = [];
@@ -23,7 +23,7 @@ var guessed = "";
 var guessedArray = [];
 var random;
 var wins = 0;
-var remaining = 8; 
+var remaining = 10; 
 
 document.onkeyup = function(event) {
 	random = Math.floor(Math.random() * quotes.length);
@@ -47,8 +47,8 @@ document.onkeyup = function(event) {
 
 		if(alphabet.indexOf(choice) > -1) {
 			if(guessedArray.indexOf(choice) > -1 && userSelectedWord.indexOf(choice) === -1 && userSelectedWord.indexOf(choice.toUpperCase()) === -1) {
-				random = Math.floor(Math.random() * repeatLetterMusicTags.length);
-				document.getElementById(repeatLetterMusicTags[random]).play();
+				random = Math.floor(Math.random() * soundTag.length);
+				document.getElementById(soundTag[random]).play();
 			}
 			else if(guessedArray.indexOf(choice) === -1 && userSelectedWord.indexOf(choice) === -1 && userSelectedWord.indexOf(choice.toUpperCase()) === -1) {
 				remaining--;
@@ -72,12 +72,12 @@ document.onkeyup = function(event) {
 		if(strings.indexOf("_") === -1) {
 			wins++;
 			document.getElementById("wins").textContent = wins;
-			random = Math.floor(Math.random() * victoryMusicTags.length);
-			document.getElementById(victoryMusicTags[random]).play();
+			random = Math.floor(Math.random() * sound2tag.length);
+			document.getElementById(sound2tag[random]).play();
 		}
 
 		if(remaining === 0 || strings.indexOf("_") === -1) {
-			remaining = 8;
+			remaining = 10;
 			guessed = "";
 			guessedArray = [];
 			strings = "";
