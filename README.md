@@ -2,4 +2,4 @@
 
 
 
-Simple Javascript game of Hangman, Senfield themed. allows for 8 wrong guesses and plays music/sound on corresponding answers. 
+Simple Javascript game of Hangman, Seinfeld themed. allows for 8 wrong guesses and plays music/sound on corresponding answers. 
