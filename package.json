@@ -1,0 +1,11 @@
+{
+  "name": "seinfeld-hangman",
+  "version": "2.0.0",
+  "description": "A Seinfeld-themed hangman game. No build step; the game itself has zero dependencies.",
+  "private": true,
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "test": "node tests/game.test.js && node tests/soak.test.js"
+  },
+  "devDependencies": { "jsdom": "^24.0.0" }
+}

@@ -1,65 +1,104 @@
 <!DOCTYPE html>
-<html lang="en-us">
-	<head>
-		<meta charset="UTF-8">
-		<title>Seinfeld</title>
-		<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
-		<link rel="stylesheet" type="text/css" href="assets/css/style.css">
-		<link href="https://fonts.googleapis.com/css?family=Alegreya+Sans" rel="stylesheet">
-		<audio src="assets/audio/sound2/seinfeld.mp3" autoplay></audio>
-		<meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5" />
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<title>Seinfeld Hangman</title>
+	<meta name="description" content="A Seinfeld-themed hangman game. Guess the quote, the character, the episode. No soup for you.">
+	<meta name="theme-color" content="#14141a">
 
-	</head>
-	<body>
+	<meta property="og:title" content="Seinfeld Hangman">
+	<meta property="og:description" content="Guess the quote, the character, the episode. No soup for you.">
+	<meta property="og:type" content="website">
 
-		<script type="text/javascript" src="assets/javascript/games.js"></script>
-		<audio id = "seinfeld" src = "assets/audio/sound2/seinfeld.mp3"> </audio>
-		<audio id = "bubble" src = "assets/audio/sound1/bubble.mp3"> </audio>
-		<audio id = "cantstandya" src = "assets/audio/sound1/cantstandya.mp3"> </audio>
-		<audio id = "contest" src = "assets/audio/sound1/contest.mp3"> </audio>
-		<audio id = "dingo" src = "assets/audio/sound1/dingo.mp3"> </audio>
-		<audio id = "fakes" src = "assets/audio/sound1/fakes.mp3"> </audio>
-		<audio id = "getdown" src = "assets/audio/sound1/getdown.mp3"> </audio>
-		<audio id = "getout" src = "assets/audio/sound1/getout.mp3"> </audio>
-		<audio id = "giddyup" src = "assets/audio/sound1/giddyup.mp3"> </audio>
-		<audio id = "icare" src = "assets/audio/sound1/icare.mp3"> </audio>
-		<audio id = "idiot" src = "assets/audio/sound1/idiot.mp3"> </audio>
-		<audio id = "jackass" src = "assets/audio/sound1/jackass.mp3"> </audio>
-		<audio id = "machine" src = "assets/audio/sound1/machine.mp3"> </audio>
-		<audio id = "pirate" src = "assets/audio/sound1/pirate.mp3"> </audio>
-		<audio id = "pretzels" src = "assets/audio/sound1/pretzels.mp3"> </audio>
-		<audio id = "rediculous" src = "assets/audio/sound1/rediculous.mp3"> </audio>
-		
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
 
-		<audio id = "reguifter" src = "assets/audio/sound2/reguifter.mp3"> </audio>
-		<audio id = "risk" src = "assets/audio/sound2/risk.mp3"> </audio>
-		<audio id = "serenity" src = "assets/audio/sound2/serenity.mp3"> </audio>
-		<audio id = "society" src = "assets/audio/sound2/society.mp3"> </audio>
-		<audio id = "switzerland" src = "assets/audio/sound2/switzerland.mp3"> </audio>
-		<audio id = "thebro" src = "assets/audio/sound2/thebro.mp3"> </audio>
-		<audio id = "yada" src = "assets/audio/sound2/yada.mp3"> </audio>
-		<audio id = "youstink" src = "assets/audio/sound2/youstink.mp3"> </audio>
-		
-		<header>
-			<h1>Seinfeld HangMan!</h1>
+	<!-- Start gate: also the user gesture that unlocks audio on mobile -->
+	<div id="start" class="overlay" role="dialog" aria-modal="true" aria-labelledby="startTitle">
+		<div class="overlay-card">
+			<h1 id="startTitle" class="logo">Seinfeld<span>Hangman</span></h1>
+			<p class="tagline">A game about nothing. Guess the letters anyway.</p>
+			<button id="startBtn" class="btn btn--primary" type="button">Start playing</button>
+			<p class="fineprint">Tap the keys, or use your keyboard. <kbd>?</kbd> for a hint.</p>
+		</div>
+	</div>
+
+	<div id="game" class="wrap" aria-hidden="true">
+
+		<header class="topbar">
+			<h1 class="logo logo--sm">Seinfeld<span>Hangman</span></h1>
+			<button id="soundBtn" class="icon-btn" type="button" aria-label="Mute sound effects">🔊</button>
 		</header>
-		<div id="left">
-		</div>
-		<div class="border" id="right">
-			<p>Press any key to start playing</p>
-			<p>Wins :
-			<span id="wins"></span></p>
-			<p>Current Word 
-			<br>
-			<span id="currentWord"></span></p> 
-			<p>Number of Guesses Remaining
-			<br>
-			<span id="guessesRemaining"></span></p>
-			<p>Letters Already Guessed
-			<br>
-			<span id="lettersGuessed"></span></p>
-		</div>
-	</body>
-    </html>
 
+		<div class="stats" role="group" aria-label="Scoreboard">
+			<div class="stat"><span class="stat-val" id="wins">0</span><span class="stat-key">Wins</span></div>
+			<div class="stat"><span class="stat-val" id="losses">0</span><span class="stat-key">Losses</span></div>
+			<div class="stat"><span class="stat-val" id="streak">0</span><span class="stat-key">Streak</span></div>
+			<div class="stat"><span class="stat-val" id="best">0</span><span class="stat-key">Best</span></div>
+		</div>
 
+		<main class="board">
+
+			<section class="gallows-pane" aria-label="Hangman">
+				<svg id="figure" viewBox="0 0 200 240" role="img" aria-label="Hangman drawing">
+					<!-- Frame is always drawn -->
+					<g class="frame">
+						<line x1="20"  y1="230" x2="120" y2="230" />
+						<line x1="55"  y1="230" x2="55"  y2="20"  />
+						<line x1="55"  y1="20"  x2="140" y2="20"  />
+						<line x1="140" y1="20"  x2="140" y2="45"  />
+					</g>
+					<!-- Revealed one per wrong guess -->
+					<g class="body">
+						<circle data-stage="1" cx="140" cy="65" r="20" />
+						<line   data-stage="2" x1="140" y1="85"  x2="140" y2="150" />
+						<line   data-stage="3" x1="140" y1="100" x2="110" y2="125" />
+						<line   data-stage="4" x1="140" y1="100" x2="170" y2="125" />
+						<line   data-stage="5" x1="140" y1="150" x2="115" y2="195" />
+						<line   data-stage="6" x1="140" y1="150" x2="165" y2="195" />
+						<g data-stage="7" class="face">
+							<line x1="130" y1="58" x2="137" y2="65" />
+							<line x1="137" y1="58" x2="130" y2="65" />
+							<line x1="143" y1="58" x2="150" y2="65" />
+							<line x1="150" y1="58" x2="143" y2="65" />
+						</g>
+						<path data-stage="8" d="M131 76 q9 -8 18 0" fill="none" />
+					</g>
+				</svg>
+				<div class="lives-badge">
+					<span id="lives">8</span><span class="lives-key">left</span>
+				</div>
+			</section>
+
+			<section class="play-pane">
+				<div class="chip" id="category">Quote</div>
+				<div id="word" class="word" role="status" aria-live="polite"></div>
+				<button id="hintBtn" class="btn btn--ghost" type="button">
+					Hint <span class="cost">costs a limb</span>
+				</button>
+			</section>
+
+		</main>
+
+		<nav id="keyboard" class="keyboard" aria-label="Letter keyboard"></nav>
+	</div>
+
+	<!-- Round result -->
+	<div id="modal" class="overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalTitle">
+		<div class="overlay-card">
+			<h2 id="modalTitle">Giddy up!</h2>
+			<p id="modalWord" class="answer"></p>
+			<p id="modalNote" class="fineprint"></p>
+			<button id="nextBtn" class="btn btn--primary" type="button">Next puzzle</button>
+		</div>
+	</div>
+
+	<script src="assets/javascript/words.js"></script>
+	<script src="assets/javascript/game.js"></script>
+</body>
+</html>
