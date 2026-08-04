@@ -80,6 +80,28 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; backgroun
 .icon-btn:hover { background: var(--ink-3); }
 .icon-btn:active { transform: scale(.92); }
 
+.topbar-actions { display: flex; align-items: center; gap: .5rem; }
+
+.pill-btn {
+	--chip: var(--muted);
+	max-width: 9rem;
+	padding: .45rem .9rem;
+	overflow: hidden;
+	font-size: .72rem;
+	font-weight: 700;
+	letter-spacing: .1em;
+	text-transform: uppercase;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--chip);
+	background: var(--ink-2);
+	border: 1px solid color-mix(in srgb, var(--chip) 35%, var(--line));
+	border-radius: 999px;
+	transition: color .15s, background .15s, transform .15s;
+}
+.pill-btn:hover { background: var(--ink-3); }
+.pill-btn:active { transform: scale(.94); }
+
 /* ── Scoreboard ───────────────────────────────────────────────────────────── */
 
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; }
@@ -95,6 +117,32 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; backgroun
 }
 .stat-val { font-size: clamp(1.1rem, 4.5vw, 1.5rem); font-weight: 800; color: var(--yellow); }
 .stat-key { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+/* ── Bank progress ────────────────────────────────────────────────────────── */
+
+.bank { display: flex; align-items: center; gap: .6rem; margin-top: -.35rem; }
+
+.bank-track {
+	flex: 1;
+	height: 4px;
+	overflow: hidden;
+	background: var(--ink-3);
+	border-radius: 999px;
+}
+.bank-fill {
+	width: 0;
+	height: 100%;
+	background: linear-gradient(90deg, var(--red), var(--yellow));
+	border-radius: 999px;
+	transition: width .4s ease;
+}
+.bank-text {
+	font-size: .68rem;
+	letter-spacing: .08em;
+	text-transform: uppercase;
+	color: var(--muted);
+	white-space: nowrap;
+}
 
 /* ── Board ────────────────────────────────────────────────────────────────── */
 
@@ -186,6 +234,16 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; backgroun
 	100% { transform: none; opacity: 1; }
 }
 
+/* A wrong guess rattles the board — the only motion that costs you something. */
+.board.shake { animation: shake .32s cubic-bezier(.36, .07, .19, .97); }
+
+@keyframes shake {
+	10%, 90% { transform: translateX(-2px); }
+	20%, 80% { transform: translateX(4px); }
+	30%, 50%, 70% { transform: translateX(-6px); }
+	40%, 60% { transform: translateX(6px); }
+}
+
 /* ── Buttons ──────────────────────────────────────────────────────────────── */
 
 .btn {
@@ -269,6 +327,42 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; backgroun
 }
 
 @keyframes rise { from { transform: translateY(14px) scale(.97); opacity: 0; } }
+
+/* ── Category filter chips ────────────────────────────────────────────────── */
+
+.cats { display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem; }
+
+.cat {
+	--chip: var(--muted);
+	display: inline-flex;
+	align-items: center;
+	gap: .4rem;
+	padding: .4rem .75rem;
+	font-size: .74rem;
+	font-weight: 700;
+	letter-spacing: .06em;
+	text-transform: uppercase;
+	color: var(--muted);
+	background: var(--ink-3);
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	transition: color .15s, background .15s, border-color .15s, transform .1s;
+}
+.cat:hover { color: var(--text); }
+.cat:active { transform: scale(.95); }
+.cat--on {
+	color: var(--chip);
+	background: color-mix(in srgb, var(--chip) 14%, transparent);
+	border-color: color-mix(in srgb, var(--chip) 55%, transparent);
+}
+.cat-n { font-size: .68em; opacity: .65; }
+
+.modal-actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: .5rem;
+}
 
 #modalTitle { font-size: clamp(1.5rem, 6vw, 2.1rem); font-weight: 800; text-transform: uppercase; }
 #modalTitle.won  { color: var(--green); }

@@ -146,5 +146,62 @@ for (let i = 0; i < 60; i++) {
 }
 ok(new Set(seenWords).size === 60, `60 consecutive rounds, ${new Set(seenWords).size} distinct answers (no repeats)`);
 
+console.log('\n[puzzle bank integrity]');
+const CATEGORIES = new Function(fs.readFileSync(ROOT + '/assets/javascript/words.js','utf8') + '\n; return CATEGORIES;')();
+const norm = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+const dupes = [];
+const bankSeen = new Map();
+PUZZLES.forEach(([p]) => {
+  const k = norm(p);
+  if (bankSeen.has(k)) dupes.push(p); else bankSeen.set(k, p);
+});
+ok(dupes.length === 0, `no duplicate phrases (${PUZZLES.length} puzzles)` + (dupes.length ? ` — ${dupes}` : ''));
+ok(PUZZLES.every(([, c]) => CATEGORIES[c]), 'every puzzle uses a declared category');
+ok(PUZZLES.every(([p]) => /[a-z]/i.test(p)), 'every puzzle has at least one guessable letter');
+ok(PUZZLES.every(([p]) => p === p.trim() && !/\s\s/.test(p)), 'no stray or doubled whitespace');
+const epCount = PUZZLES.filter(([, c]) => c === 'episode').length;
+ok(epCount >= 169, `all nine seasons of episodes present (${epCount})`);
+
+console.log('\n[audio manifest]');
+const gameSrc = fs.readFileSync(ROOT + '/assets/javascript/game.js', 'utf8');
+const grab = (name) => new Function('return ' + gameSrc.match(new RegExp('const ' + name + ' = (\\{[\\s\\S]*?\\n  \\});'))[1])();
+const CLIPS = grab('CLIPS'), SIGNATURE = grab('SIGNATURE');
+const missingFiles = Object.entries(CLIPS)
+  .filter(([n, dir]) => !fs.existsSync(`${ROOT}/assets/audio/${dir}/${n}.mp3`)).map(([n]) => n);
+ok(missingFiles.length === 0, `every manifest clip exists on disk (${Object.keys(CLIPS).length})` + (missingFiles.length ? ` — missing ${missingFiles}` : ''));
+const orphanClips = [...new Set(Object.values(SIGNATURE))].filter((c) => !CLIPS[c]);
+ok(orphanClips.length === 0, 'signature clips are all in the manifest' + (orphanClips.length ? ` — ${orphanClips}` : ''));
+const bankLower = new Set(PUZZLES.map(([p]) => p.toLowerCase()));
+const orphanPhrases = Object.keys(SIGNATURE).filter((p) => !bankLower.has(p));
+ok(orphanPhrases.length === 0, `signature phrases all exist in the bank (${Object.keys(SIGNATURE).length})` + (orphanPhrases.length ? ` — ${orphanPhrases}` : ''));
+
+console.log('\n[category filter]');
+const fresh2 = new JSDOM(fs.readFileSync(ROOT + '/index.html', 'utf8'),
+  { runScripts: 'outside-only', pretendToBeVisual: true, url: 'http://localhost:8765/' });
+fresh2.window.Audio = window.Audio;
+fresh2.window.localStorage.clear();
+fresh2.window.eval(
+  fs.readFileSync(ROOT + '/assets/javascript/words.js', 'utf8') + '\n' +
+  fs.readFileSync(ROOT + '/assets/javascript/game.js', 'utf8'));
+const f2 = fresh2.window.document;
+ok(f2.querySelectorAll('#cats .cat').length === Object.keys(CATEGORIES).length + 1, 'a chip per category, plus All');
+const mediaCount = PUZZLES.filter(([, c]) => c === 'media').length;
+f2.querySelector('[data-filter="media"]').click();
+ok(f2.querySelector('[data-filter="media"]').classList.contains('cat--on'), 'chosen category chip marked active');
+ok(f2.getElementById('filterBtn').textContent === CATEGORIES.media.label, 'topbar reflects the chosen category');
+f2.getElementById('startBtn').click();
+const drawn = [];
+for (let i = 0; i < mediaCount + 3; i++) {
+  'abcdefghijklmnopqrstuvwxyz'.split('').forEach(c =>
+    f2.dispatchEvent(new fresh2.window.KeyboardEvent('keydown', { key: c, bubbles: true })));
+  drawn.push(f2.getElementById('modalWord').textContent);
+  f2.getElementById('nextBtn').click();
+}
+const mediaPhrases = new Set(PUZZLES.filter(([, c]) => c === 'media').map(([p]) => p));
+ok(drawn.every(a => mediaPhrases.has(a)), `filtered rounds only draw from that category (${drawn.length} rounds)`);
+ok(new Set(drawn.slice(0, mediaCount)).size === mediaCount, `no repeats within the ${mediaCount}-puzzle pool`);
+ok(drawn.length > mediaCount, 'pool recycles instead of hanging once exhausted');
+ok(/\d+ \/ \d+/.test(f2.getElementById('bankText').textContent), 'bank progress renders');
+
 console.log(`\n${fail === 0 ? 'ALL PASS' : 'FAILURES'} — ${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

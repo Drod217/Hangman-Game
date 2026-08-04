@@ -23,6 +23,7 @@
 		<div class="overlay-card">
 			<h1 id="startTitle" class="logo">Seinfeld<span>Hangman</span></h1>
 			<p class="tagline">A game about nothing. Guess the letters anyway.</p>
+			<div id="cats" class="cats" role="group" aria-label="Category filter"></div>
 			<button id="startBtn" class="btn btn--primary" type="button">Start playing</button>
 			<p class="fineprint">Tap the keys, or use your keyboard. <kbd>?</kbd> for a hint.</p>
 		</div>
@@ -32,7 +33,10 @@
 
 		<header class="topbar">
 			<h1 class="logo logo--sm">Seinfeld<span>Hangman</span></h1>
-			<button id="soundBtn" class="icon-btn" type="button" aria-label="Mute sound effects">🔊</button>
+			<div class="topbar-actions">
+				<button id="filterBtn" class="pill-btn" type="button" aria-label="Change category">All</button>
+				<button id="soundBtn" class="icon-btn" type="button" aria-label="Mute sound effects">🔊</button>
+			</div>
 		</header>
 
 		<div class="stats" role="group" aria-label="Scoreboard">
@@ -40,6 +44,11 @@
 			<div class="stat"><span class="stat-val" id="losses">0</span><span class="stat-key">Losses</span></div>
 			<div class="stat"><span class="stat-val" id="streak">0</span><span class="stat-key">Streak</span></div>
 			<div class="stat"><span class="stat-val" id="best">0</span><span class="stat-key">Best</span></div>
+		</div>
+
+		<div class="bank" role="group" aria-label="Bank progress">
+			<div class="bank-track"><div id="bankBar" class="bank-fill"></div></div>
+			<span id="bankText" class="bank-text">0 / 0</span>
 		</div>
 
 		<main class="board">
@@ -94,7 +103,10 @@
 			<h2 id="modalTitle">Giddy up!</h2>
 			<p id="modalWord" class="answer"></p>
 			<p id="modalNote" class="fineprint"></p>
-			<button id="nextBtn" class="btn btn--primary" type="button">Next puzzle</button>
+			<div class="modal-actions">
+				<button id="nextBtn" class="btn btn--primary" type="button">Next puzzle</button>
+				<button id="shareBtn" class="btn btn--ghost" type="button">Copy result</button>
+			</div>
 		</div>
 	</div>
 
